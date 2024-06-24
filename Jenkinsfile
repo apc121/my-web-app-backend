@@ -28,8 +28,8 @@ pipeline {
                 script {
                     sshagent(['3.110.45.32']) {
                         sh '''
-                        rsync -avz --delete --exclude 'node_modules' ./ ${env.SERVER_USER}@${env.SERVER_IP}:${env.REMOTE_DIR}
-                        ssh ${env.SERVER_USER}@${env.SERVER_IP} "cd ${env.REMOTE_DIR} && npm install && pm2 restart all || pm2 start index.js"
+                        rsync -avz --delete --exclude 'node_modules' ./ ${SERVER_USER}@${SERVER_IP}:${REMOTE_DIR}
+                        ssh ${SERVER_USER}@${SERVER_IP} "cd ${REMOTE_DIR} && npm install && pm2 restart all || pm2 start index.js"
                         '''
                     }
                 }
