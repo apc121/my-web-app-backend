@@ -25,17 +25,18 @@ pipeline {
 
 
         stage('Deploy') {
-            steps {
-                script {
-                sshagent([CREDENTIALS_ID]) {
-                    sh '''
-                    rsync -avz --delete --exclude 'node_modules' ./ ${SERVER_USER}@${SERVER_IP}:${REMOTE_DIR}
-                    ssh ${SERVER_USER}@${SERVER_IP}:'cd /var/www/my-web-app-backend && npm install && pm2 restart all || pm2 start index.js'
-                    '''
-                }    
-              }      
+    steps {
+        script {
+            sshagent(['webappkey']) {
+                sh '''
+                rsync -avz --delete --exclude 'node_modules' ./ ${env.SERVER_USER}@${env.SERVER_IP}:${env.REMOTE_DIR}
+                ssh ${env.SERVER_USER}@${env.SERVER_IP} "cd ${env.REMOTE_DIR} && npm install && pm2 restart all || pm2 start index.js"
+                '''
             }
         }
+    }
+}
+
     }
 
     post {
