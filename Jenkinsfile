@@ -5,6 +5,9 @@ pipeline {
         NODE_HOME = tool name: 'nodejs'
         PATH = "${env.NODE_HOME}/bin:${env.PATH}"
         CREDENTIALS_ID = 'webappkey'
+        SERVER_USER = 'ubuntu'
+        SERVER_IP = '13.201.163.216'
+        REMOTE_DIR = '/var/www/my-web-app-backend/'
     }
 
     stages {
@@ -26,8 +29,8 @@ pipeline {
                 script {
                 sshagent([CREDENTIALS_ID]) {
                     sh '''
-                    rsync -avz --delete --exclude 'node_modules' ./ ubuntu@13.201.163.216:/var/www/my-web-app-backend/
-                    ssh ubuntu@13.201.163.216 'cd /var/www/my-web-app-backend && npm install && pm2 restart all || pm2 start index.js'
+                    rsync -avz --delete --exclude 'node_modules' ./ ${SERVER_USER}@${SERVER_IP}:${REMOTE_DIR}
+                    ssh ${SERVER_USER}@${SERVER_IP}:'cd /var/www/my-web-app-backend && npm install && pm2 restart all || pm2 start index.js'
                     '''
                 }    
               }      
